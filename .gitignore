@@ -1,5 +1,5 @@
-# Dependencies
-lib/
+# Dependencies (Foundry)
+/lib/
 node_modules/
 
 # Compiler files
@@ -11,8 +11,12 @@ out/
 /broadcast/*/31337/
 /broadcast/**/dry-run/
 
-# Docs
-docs/
+# Docs (Foundry generated)
+/docs/
 
 # Dotenv file
 .env
+
+# Next.js
+.next/
+next-env.d.ts

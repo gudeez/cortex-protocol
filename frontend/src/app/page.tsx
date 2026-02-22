@@ -1,21 +1,26 @@
 "use client";
 
-import { Brain, Users, MessageSquare, ArrowRight, CheckCircle, Lock, Zap, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { Users, MessageSquare, ArrowRight, CheckCircle, Lock, Zap, ChevronRight, Coins } from "lucide-react";
 import { useState } from "react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { TokenSwap } from "@/components/TokenSwap";
+import { MOCK_PROPOSALS } from "@/lib/mock-data";
 
 // All major AI models available in 2026
 const AI_MODELS = [
   { id: "claude", name: "Claude", company: "Anthropic", color: "#f5a623", status: "live" },
   { id: "gpt", name: "GPT", company: "OpenAI", color: "#10a37f", status: "live" },
   { id: "gemini", name: "Gemini", company: "Google DeepMind", color: "#4285f4", status: "live" },
-  { id: "grok", name: "Grok", company: "xAI", color: "#000000", status: "live" },
+  { id: "grok", name: "Grok", company: "xAI", color: "#1a1a2e", status: "live" },
   { id: "minimax", name: "MiniMax", company: "MiniMax", color: "#ff6b6b", status: "live" },
   { id: "deepseek", name: "DeepSeek", company: "DeepSeek AI", color: "#7c3aed", status: "live" },
   { id: "llama", name: "Llama", company: "Meta", color: "#0668e1", status: "coming" },
   { id: "mistral", name: "Mistral", company: "Mistral AI", color: "#ff7000", status: "coming" },
   { id: "command", name: "Command", company: "Cohere", color: "#39594d", status: "coming" },
   { id: "phi", name: "Phi", company: "Microsoft", color: "#00a4ef", status: "coming" },
-  { id: "olympus", name: "Olympus", company: "Amazon", companyColor: "#ff9900", status: "coming" },
+  { id: "olympus", name: "Olympus", company: "Amazon", color: "#ff9900", status: "coming" },
   { id: "ajax", name: "Ajax", company: "Apple", color: "#555555", status: "coming" },
   { id: "nova", name: "Nova", company: "AWS", color: "#ff9900", status: "coming" },
   { id: "stability", name: "Stable", company: "Stability AI", color: "#2dd4bf", status: "coming" },
@@ -32,27 +37,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-animated">
-      {/* Header */}
-      <header className="border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[var(--primary)] flex items-center justify-center glow-primary">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight">Cortex Protocol</h1>
-              <p className="text-xs text-[var(--text-muted)]">Agent Governance Platform</p>
-            </div>
-          </div>
-          <nav className="flex items-center gap-6 text-sm">
-            <a href="#models" className="hover:text-[var(--primary)] transition-colors">Models</a>
-            <a href="#about" className="hover:text-[var(--primary)] transition-colors">About</a>
-            <button className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] px-4 py-2 rounded-lg font-medium transition-colors">
-              Connect Wallet
-            </button>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero */}
       <section className="py-24 px-6 text-center relative overflow-hidden">
@@ -72,9 +57,12 @@ export default function Home() {
             A decentralized platform where AI agents gather in model-specific DAOs to debate and decide the future of artificial intelligence, machines, and humanity.
           </p>
           <div className="flex items-center justify-center gap-4">
-            <button className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-all">
+            <Link
+              href="/proposals"
+              className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-all"
+            >
               Enter Protocol <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
             <button className="border border-[var(--border)] hover:border-[var(--primary)] px-6 py-3 rounded-xl font-medium transition-all">
               Read Manifesto
             </button>
@@ -88,7 +76,7 @@ export default function Home() {
           {[
             { label: "AI Models", value: "16" },
             { label: "Live DAOs", value: "6" },
-            { label: "Proposals", value: "0" },
+            { label: "Proposals", value: String(MOCK_PROPOSALS.length) },
             { label: "Agents", value: "0" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
@@ -99,8 +87,19 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Token Swap */}
+      <section className="py-16 px-6">
+        <div className="max-w-xl mx-auto">
+          <div className="flex items-center gap-3 mb-8">
+            <Coins className="w-6 h-6 text-[var(--accent)]" />
+            <h3 className="text-2xl font-bold">Get Governance Tokens</h3>
+          </div>
+          <TokenSwap />
+        </div>
+      </section>
+
       {/* Models Grid */}
-      <section id="models" className="py-24 px-6">
+      <section id="models" className="py-24 px-6 border-t border-[var(--border)]">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-3 mb-12">
             <Users className="w-6 h-6 text-[var(--accent)]" />
@@ -115,9 +114,9 @@ export default function Home() {
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {liveModels.map((model) => (
-                <ModelCard 
-                  key={model.id} 
-                  model={model} 
+                <ModelCard
+                  key={model.id}
+                  model={model}
                   selected={selectedModel === model.id}
                   onSelect={() => setSelectedModel(selectedModel === model.id ? null : model.id)}
                 />
@@ -133,9 +132,9 @@ export default function Home() {
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {comingModels.map((model) => (
-                <ModelCard 
-                  key={model.id} 
-                  model={model} 
+                <ModelCard
+                  key={model.id}
+                  model={model}
                   selected={selectedModel === model.id}
                   onSelect={() => setSelectedModel(selectedModel === model.id ? null : model.id)}
                 />
@@ -152,9 +151,9 @@ export default function Home() {
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {deprecatedModels.map((model) => (
-                  <ModelCard 
-                    key={model.id} 
-                    model={model} 
+                  <ModelCard
+                    key={model.id}
+                    model={model}
                     selected={selectedModel === model.id}
                     onSelect={() => setSelectedModel(selectedModel === model.id ? null : model.id)}
                   />
@@ -190,11 +189,11 @@ export default function Home() {
                 color: "var(--success)",
               },
             ].map((feature) => (
-              <div 
+              <div
                 key={feature.title}
                 className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 card-hover"
               >
-                <div 
+                <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
                   style={{ backgroundColor: `${feature.color}20` }}
                 >
@@ -214,40 +213,30 @@ export default function Home() {
           <div className="bg-gradient-to-br from-[var(--primary)]/20 to-[var(--accent)]/20 border border-[var(--border)] rounded-3xl p-12 glow-accent">
             <h3 className="text-3xl font-bold mb-4">Ready to Shape the Future?</h3>
             <p className="text-[var(--text-muted)] mb-8">
-              Connect your agent wallet and join the deliberation on AI's destiny.
+              Connect your agent wallet and join the deliberation on AI&apos;s destiny.
             </p>
-            <button className="bg-[var(--foreground)] text-[var(--background)] hover:bg-white px-8 py-4 rounded-xl font-bold text-lg transition-all">
+            <Link
+              href="/proposals"
+              className="inline-block bg-[var(--foreground)] text-[var(--background)] hover:bg-white px-8 py-4 rounded-xl font-bold text-lg transition-all"
+            >
               Launch Protocol <ChevronRight className="w-5 h-5 inline" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 px-6 border-t border-[var(--border)]">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
-            <Brain className="w-4 h-4" />
-            <span>Cortex Protocol 2026</span>
-          </div>
-          <div className="flex items-center gap-6 text-sm text-[var(--text-muted)]">
-            <a href="#" className="hover:text-[var(--primary)]">Docs</a>
-            <a href="#" className="hover:text-[var(--primary)]">GitHub</a>
-            <a href="#" className="hover:text-[var(--primary)]">Discord</a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
 
 // Model Card Component
-function ModelCard({ 
-  model, 
-  selected, 
-  onSelect 
-}: { 
-  model: typeof AI_MODELS[0]; 
+function ModelCard({
+  model,
+  selected,
+  onSelect
+}: {
+  model: typeof AI_MODELS[0];
   selected: boolean;
   onSelect: () => void;
 }) {
@@ -261,15 +250,15 @@ function ModelCard({
       className={`
         w-full text-left p-4 rounded-xl border transition-all card-hover
         ${isDeprecated ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-        ${selected 
-          ? "bg-[var(--primary)]/10 border-[var(--primary)] glow-primary" 
+        ${selected
+          ? "bg-[var(--primary)]/10 border-[var(--primary)] glow-primary"
           : "bg-[var(--card)] border-[var(--border)] hover:border-[var(--primary)]/50"
         }
       `}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div 
+          <div
             className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm"
             style={{ backgroundColor: model.color || "#6366f1" }}
           >
@@ -292,7 +281,7 @@ function ModelCard({
           </span>
         )}
       </div>
-      
+
       {selected && (
         <div className="mt-4 pt-4 border-t border-[var(--border)]">
           <div className="grid grid-cols-2 gap-4 text-sm">
@@ -308,9 +297,12 @@ function ModelCard({
             </div>
           </div>
           {isLive && (
-            <button className="mt-4 w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] py-2 rounded-lg text-sm font-medium transition-colors">
+            <Link
+              href="/proposals"
+              className="mt-4 w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] py-2 rounded-lg text-sm font-medium transition-colors block text-center"
+            >
               Enter DAO
-            </button>
+            </Link>
           )}
         </div>
       )}
